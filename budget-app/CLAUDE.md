@@ -94,6 +94,16 @@ Seed it with exactly the workbook's data (see `build_budget.py`). Dates are `YYY
 ### 9. Vercel
 - Import the repo in Vercel with **Root Directory = `budget-app`**, add the two env vars. `vercel.json` handles the rest.
 
+## Agent skills
+
+### Issue tracker
+
+Issues and specs live as local markdown files under `budget-app/.scratch/`. See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+
+Single-context layout: `GLOSSARY.md` + `docs/adr/` at the `budget-app/` root, created lazily as needed. See `docs/agents/domain.md`.
+
 ## Conventions
 - Repo is a monorepo: this project lives only in `budget-app/`. Branches are prefixed `budget-app/…`.
 - TypeScript strict; no `any`. Validate external data with zod.
