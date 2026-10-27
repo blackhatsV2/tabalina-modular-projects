@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "id": "jayrold",
+    "name": "Jayrold",
+    "currency": { "code": "PHP", "symbol": "₱", "decimalDigits": 2 },
+    "planStart": "2026-10-27",
+    "planEnd": "2027-12-31",
+    "updatedAt": "2026-10-27T00:00:00.000Z"
+  },
+  "accounts": [
+    { "id": "cash", "name": "Cash on hand", "kind": "cash", "startingBalance": 30000 },
+    { "id": "gcash", "name": "GCash", "kind": "gcash", "startingBalance": 273100 },
+    { "id": "bank", "name": "Bank account", "kind": "bank", "startingBalance": 0 }
+  ],
+  "periodSchedule": { "type": "semiMonthly", "days": [15, "last"] },
+  "savingsGoals": [
+    { "id": "emergency-fund", "name": "Emergency fund", "targetAmount": 1350000, "kind": "emergency" }
+  ],
+  "safetyBuffer": 50000,
+  "periodOverrides": {},
+  "actuals": {},
+  "paid": {},
+  "modules": {
+    "income": {
+      "enabled": true,
+      "sources": [
+        {
+          "id": "salary",
+          "name": "Salary",
+          "kind": "salary",
+          "amount": 600000,
+          "schedule": { "type": "semiMonthly", "days": [15, "last"] },
+          "startDate": "2026-07-06"
+        }
+      ]
+    },
+    "bills": {
+      "enabled": true,
+      "items": [
+        {
+          "id": "rent",
+          "name": "Rent (includes electricity & water)",
+          "category": "Rent",
+          "amount": 200000,
+          "recurrence": { "type": "monthly", "day": 1 },
+          "startDate": "2026-11-01"
+        },
+        {
+          "id": "christmas-extra-2026",
+          "name": "Christmas extra",
+          "category": "Extra",
+          "amount": 50000,
+          "recurrence": { "type": "once", "date": "2026-12-15" }
+        },
+        {
+          "id": "christmas-extra-2027",
+          "name": "Christmas extra",
+          "category": "Extra",
+          "amount": 50000,
+          "recurrence": { "type": "once", "date": "2027-12-15" }
+        },
+        {
+          "id": "data-reload",
+          "name": "Smart data reload (26GB, no expiry)",
+          "category": "Data",
+          "amount": 44900,
+          "recurrence": { "type": "once", "date": "2027-10-15" }
+        }
+      ]
+    },
+    "loans": {
+      "enabled": true,
+      "items": [
+        {
+          "id": "spaylater",
+          "name": "SPayLater",
+          "provider": "SPayLater",
+          "startDate": "2026-11-05",
+          "installments": [
+            { "date": "2026-11-05", "amount": 272646, "note": "Includes the 53.46 handling fee" },
+            { "date": "2026-12-05", "amount": 267298, "note": "Handling fee not confirmed yet - see fee line" }
+          ],
+          "feeLines": [
+            { "date": "2026-12-05", "amount": 5346, "note": "Possible handling fee - safety assumption, set to 0 if there is none" }
+          ]
+        },
+        {
+          "id": "gloan1",
+          "name": "Gloan 1",
+          "provider": "GLoan",
+          "startDate": "2026-11-06",
+          "installments": [
+            { "date": "2026-11-06", "amount": 102908, "note": "payment 1 of 8" },
+            { "date": "2026-12-06", "amount": 102908, "note": "payment 2 of 8" },
+            { "date": "2027-01-06", "amount": 102908, "note": "payment 3 of 8" },
+            { "date": "2027-02-06", "amount": 102908, "note": "payment 4 of 8" },
+            { "date": "2027-03-06", "amount": 102908, "note": "payment 5 of 8" },
+            { "date": "2027-04-06", "amount": 102908, "note": "payment 6 of 8" },
+            { "date": "2027-05-06", "amount": 102908, "note": "payment 7 of 8" },
+            { "date": "2027-06-06", "amount": 102906, "note": "payment 8 of 8" }
+          ]
+        },
+        {
+          "id": "gloan2",
+          "name": "Gloan 2",
+          "provider": "GLoan",
+          "startDate": "2026-11-24",
+          "installments": [
+            { "date": "2026-11-24", "amount": 80856, "note": "payment 1 of 7" },
+            { "date": "2026-12-24", "amount": 80856, "note": "payment 2 of 7" },
+            { "date": "2027-01-24", "amount": 80856, "note": "payment 3 of 7" },
+            { "date": "2027-02-24", "amount": 80856, "note": "payment 4 of 7" },
+            { "date": "2027-03-24", "amount": 80856, "note": "payment 5 of 7" },
+            { "date": "2027-04-24", "amount": 80856, "note": "payment 6 of 7" },
+            { "date": "2027-05-24", "amount": 80855, "note": "payment 7 of 7" }
+          ]
+        },
+        {
+          "id": "gloan3",
+          "name": "Gloan 3",
+          "provider": "GLoan",
+          "startDate": "2026-11-24",
+          "installments": [
+            { "date": "2026-11-24", "amount": 65006, "note": "payment 1 of 9" },
+            { "date": "2026-12-24", "amount": 65006, "note": "payment 2 of 9" },
+            { "date": "2027-01-24", "amount": 65006, "note": "payment 3 of 9" },
+            { "date": "2027-02-24", "amount": 65006, "note": "payment 4 of 9" },
+            { "date": "2027-03-24", "amount": 65006, "note": "payment 5 of 9" },
+            { "date": "2027-04-24", "amount": 65006, "note": "payment 6 of 9" },
+            { "date": "2027-05-24", "amount": 65006, "note": "payment 7 of 9" },
+            { "date": "2027-06-24", "amount": 65006, "note": "payment 8 of 9" },
+            { "date": "2027-07-24", "amount": 65006, "note": "payment 9 of 9" }
+          ]
+        }
+      ]
+    },
+    "allowance": {
+      "enabled": false,
+      "amount": 0,
+      "recurrence": { "type": "daily" }
+    },
+    "commute": {
+      "enabled": true,
+      "farePerRide": 2000,
+      "mealCost": 10000,
+      "perActiveDayExtra": { "amount": 2000, "label": "Summit water" },
+      "schedules": [
+        {
+          "id": "P1",
+          "name": "Mon/Wed-Sat (1st Sem 2026)",
+          "rides": [2, 0, 2, 2, 2, 4, 0],
+          "meals": [0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "id": "P2",
+          "name": "Thu-Sat (2nd Sem 2026)",
+          "rides": [0, 0, 0, 2, 4, 2, 0],
+          "meals": [0, 0, 0, 1, 0, 1, 0]
+        },
+        {
+          "id": "PB",
+          "name": "Break: campus 2x a week",
+          "rides": [0, 0, 0, 2, 0, 2, 0],
+          "meals": [0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "id": "PX",
+          "name": "Christmas break: no campus",
+          "rides": [0, 0, 0, 0, 0, 0, 0],
+          "meals": [0, 0, 0, 0, 0, 0, 0]
+        }
+      ],
+      "terms": [
+        { "id": "t1", "startDate": "2026-10-27", "name": "1st Sem SY 26-27: P3 exam week", "scheduleId": "P1" },
+        { "id": "t2", "startDate": "2026-11-01", "name": "Sem break: grades & clearance", "scheduleId": "PB" },
+        { "id": "t3", "startDate": "2026-11-16", "name": "2nd Sem SY 26-27", "scheduleId": "P2" },
+        { "id": "t4", "startDate": "2026-12-20", "name": "Christmas break", "scheduleId": "PX" },
+        { "id": "t5", "startDate": "2027-01-04", "name": "2nd Sem SY 26-27 (resumes)", "scheduleId": "P2" },
+        { "id": "t6", "startDate": "2027-03-28", "name": "Summer break", "scheduleId": "PB" },
+        { "id": "t7", "startDate": "2027-07-05", "name": "1st Sem SY 27-28 (schedule TBA)", "scheduleId": "P2" },
+        { "id": "t8", "startDate": "2027-10-31", "name": "Sem break: grades & clearance", "scheduleId": "PB" },
+        { "id": "t9", "startDate": "2027-11-15", "name": "2nd Sem SY 27-28", "scheduleId": "P2" },
+        { "id": "t10", "startDate": "2027-12-19", "name": "Christmas break", "scheduleId": "PX" }
+      ],
+      "holidays": [
+        { "date": "2026-11-01", "name": "All Saints' Day" },
+        { "date": "2026-11-02", "name": "All Souls' Day" },
+        { "date": "2026-11-30", "name": "Bonifacio Day" },
+        { "date": "2026-12-08", "name": "Immaculate Conception" },
+        { "date": "2026-12-24", "name": "Christmas Eve" },
+        { "date": "2026-12-25", "name": "Christmas Day" },
+        { "date": "2026-12-30", "name": "Rizal Day" },
+        { "date": "2026-12-31", "name": "Last day of the year" },
+        { "date": "2027-01-01", "name": "New Year's Day" },
+        { "date": "2027-02-06", "name": "Chinese New Year" },
+        { "date": "2027-03-25", "name": "Maundy Thursday" },
+        { "date": "2027-03-26", "name": "Good Friday" },
+        { "date": "2027-03-27", "name": "Black Saturday" },
+        { "date": "2027-04-09", "name": "Araw ng Kagitingan" },
+        { "date": "2027-05-01", "name": "Labor Day" },
+        { "date": "2027-06-12", "name": "Independence Day" },
+        { "date": "2027-08-21", "name": "Ninoy Aquino Day" },
+        { "date": "2027-08-30", "name": "National Heroes Day" },
+        { "date": "2027-11-01", "name": "All Saints' Day" },
+        { "date": "2027-11-02", "name": "All Souls' Day" },
+        { "date": "2027-11-30", "name": "Bonifacio Day" },
+        { "date": "2027-12-08", "name": "Immaculate Conception" },
+        { "date": "2027-12-24", "name": "Christmas Eve" },
+        { "date": "2027-12-25", "name": "Christmas Day" },
+        { "date": "2027-12-30", "name": "Rizal Day" },
+        { "date": "2027-12-31", "name": "Last day of the year" }
+      ]
+    },
+    "flexibleExpenses": {
+      "enabled": true,
+      "items": [
+        {
+          "id": "misc",
+          "name": "Personal & misc",
+          "enabled": true,
+          "reserveRoom": false,
+          "amount": 1000,
+          "recurrence": { "type": "daily" }
+        },
+        {
+          "id": "sunday-outing",
+          "name": "Sunday outing (with girlfriend)",
+          "enabled": false,
+          "reserveRoom": true,
+          "amount": 10500,
+          "recurrence": { "type": "weekly", "weekday": 0 }
+        },
+        {
+          "id": "brother-allowance",
+          "name": "Allowance for younger brother",
+          "enabled": false,
+          "reserveRoom": true,
+          "amount": 50000,
+          "recurrence": { "type": "monthly", "day": 15 }
+        }
+      ]
+    }
+  }
+}
