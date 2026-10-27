@@ -227,3 +227,13 @@ export function enumerateDays(range: DateRange): string[] {
   const end = parseISO(range.end);
   return expandDaily(start, end);
 }
+
+/** `dateISO` shifted by `days` (negative to go backward), in UTC. */
+export function addDays(dateISO: string, days: number): string {
+  return toISO(addDaysUTC(parseISO(dateISO), days));
+}
+
+/** -1 if a < b, 0 if equal, 1 if a > b — lexicographic ISO comparison also works, this is explicit. */
+export function compareISO(a: string, b: string): number {
+  return parseISO(a).getTime() - parseISO(b).getTime();
+}

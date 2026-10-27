@@ -4,12 +4,19 @@
 
 **Blocked by:** 02
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] `simulate()` takes a parsed Profile and returns a day-by-day result spanning `planStart`..`planEnd`.
-- [ ] Pay-period boundaries come from `periodSchedule`, independent of whether any income module is present.
-- [ ] A profile with every module disabled produces a flat balance (starting balance carried forward) across every day, with no errors.
-- [ ] Every returned total (a day's planned balance, a period's closing balance) carries a breakdown whose terms sum exactly to that total.
-- [ ] A placeholder/test module that throws during its contribution is excluded from every total, and the result carries exactly one warning naming it.
-- [ ] A placeholder/test module whose contributed data fails its own schema is excluded the same way, with its own warning.
-- [ ] Excluding a module never crashes `simulate()` and never silently omits the warning.
+- [x] `simulate()` takes a parsed Profile and returns a day-by-day result spanning `planStart`..`planEnd`.
+- [x] Pay-period boundaries come from `periodSchedule`, independent of whether any income module is present.
+- [x] A profile with every module disabled produces a flat balance (starting balance carried forward) across every day, with no errors.
+- [x] Every returned total (a day's planned balance, a period's closing balance) carries a breakdown whose terms sum exactly to that total.
+- [x] A placeholder/test module that throws during its contribution is excluded from every total, and the result carries exactly one warning naming it.
+- [x] A placeholder/test module whose contributed data fails its own schema is excluded the same way, with its own warning.
+- [x] Excluding a module never crashes `simulate()` and never silently omits the warning.
+
+Implemented in `src/engine/core/{periods,runModule,simulate}.ts` and the shared module interface in
+`src/engine/modules/types.ts` (+ empty `registry.ts`, populated as later tickets land). Each module
+contributes signed per-day breakdown terms directly (`{breakdown: {date: {term: signedCentavos}}}`); the
+core just sums everything, so the invariant "breakdown sums to the total" holds by construction. Core
+also applies `periodOverrides.savings`/`.extra` as lump subtractions on each period's start day (auto-savings
+default of 0 arrives in ticket 12).
