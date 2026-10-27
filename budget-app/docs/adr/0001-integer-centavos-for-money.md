@@ -1,0 +1,5 @@
+# Integer centavos for every monetary amount
+
+The engine must reproduce `reference/ledger.json` to the centavo, and the first draft of the design leaned on plain floating-point numbers (mirroring Python's `float` plus a custom round-half-to-even helper) since that makes the arithmetic directly comparable to the source script. Decided instead to store every amount as an integer count of centavos (`type Centavos = number`, ₱20.00 = `2000`) and do all arithmetic in integers.
+
+Floats would have worked for Jayrold's own numbers specifically (everything in his workbook already sits at whole centavos), but as a general-purpose app accepting any user's numbers, float accumulation error becomes a real risk the moment someone enters an amount that doesn't round-trip cleanly — and "to the centavo" is far easier to guarantee by construction (integers) than by discipline (rounding at exactly the right points, matching Python's binary-float rounding behavior). The cost: splitting an amount across N installments or periods needs an explicit, deliberate rounding rule (e.g. the remainder goes to the last installment) instead of relying on float division.

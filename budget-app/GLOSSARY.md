@@ -1,0 +1,49 @@
+# Budget Buddy
+
+A general-purpose personal budgeting app. Jayrold's own workbook is its first validated example, not its design.
+
+## Language
+
+**Profile**:
+A user's complete budget document — accounts, income sources, bills, loans, flexible expenses, daily-spending mode, savings goals. One per person; the engine has no privileged user baked in.
+_Avoid_: Plan (that word is reserved for the budgeting time window — `planStart`/`planEnd` — and the Plan screen's pay-period cards).
+
+**Example profile**:
+A fully-specified profile used to validate the engine, e.g. Jayrold's own workbook at `fixtures/jayrold-profile.json`. Not a starter template offered to new users.
+_Avoid_: Default profile, template profile, sample data.
+
+**Centavo**:
+The base integer unit of money (₱1.00 = 100 centavos). Every amount field is stored as an integer count of centavos; the engine never uses floating point for money.
+_Avoid_: Peso amount, decimal amount (as a storage type — fine as display-layer words only).
+
+**Income source**:
+Any stream of money a profile expects to receive (salary, side job, allowance, 13th month, etc.), each on its own pay schedule.
+_Avoid_: Paycheck. "Salary" is one kind of income source, not a synonym for all of them.
+
+**Flexible expense**:
+An optional, user-toggleable cost (e.g. a weekly outing, an allowance sent to a family member) that the user can flag to reserve room for in auto-savings even while it's switched off.
+_Avoid_: Optional expense, discretionary spending.
+
+**Reserve room**:
+A flag on a flexible expense meaning auto-savings sizes every period as if that expense were enabled, even when it is currently switched off, so turning it on later never causes a shortfall.
+_Avoid_: Buffer, cushion — those describe the safety buffer, a different concept.
+
+**Daily spending mode**:
+The profile-level choice of how everyday living costs are computed: a flat allowance, or the commute module.
+_Avoid_: Daily cost model.
+
+**Commute module**:
+The optional daily-spending mode that computes rides, fares, meals, and holidays from a weekly schedule and a calendar of terms. Jayrold's own setup — not assumed for every profile.
+_Avoid_: School module (usable by anyone with a fixed weekly travel pattern, not only students).
+
+**Period schedule**:
+The `PayScheduleRule` that defines pay-period boundaries for the Plan screen and auto-savings, stored independently of any specific income source even though it usually matches the main one's rhythm.
+_Avoid_: Pay schedule (that's the per-income-source field; period schedule is the profile-wide one derived from it by default, not the same field).
+
+**Safety buffer**:
+The single, user-configurable minimum balance auto-savings protects on every future day of the plan. There is no separate "cushion" on top of it — considered and rejected, to avoid a second unexplained number in a UI aimed at someone new to budgeting.
+_Avoid_: Cushion, minimum balance.
+
+**Fee line**:
+An extra charge attached to a loan installment (e.g. a handling fee) that is still counted as its own dated amount in the day-by-day ledger.
+_Avoid_: Penalty, surcharge.

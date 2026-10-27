@@ -1,0 +1,5 @@
+# Pay periods come from a decoupled `periodSchedule`, not from `incomeSources`
+
+Once a profile can have more than one income source, "a pay period" stops being unambiguous — Jayrold's original model had exactly one salary, so "payday to payday" was the obvious boundary. Considered tying the period grid to a flag on one `incomeSources` entry ("primary income"), or to the union of every income source's dates (a new period whenever anything pays). Decided instead on a standalone `periodSchedule: PayScheduleRule` field, independent of any specific income record.
+
+In the common case the setup wizard defaults it to the user's main income's schedule, so most users never notice it's a separate field. But keeping it standalone means it survives editing or deleting the income source it was copied from, and it degrades gracefully for a profile with zero or several income sources on different schedules — the Plan screen and auto-savings always have exactly one period grid to work with. Jayrold's fixture sets `periodSchedule` to `{type:"semiMonthly", days:[15,"last"]}`, reproducing his original 30 periods exactly.

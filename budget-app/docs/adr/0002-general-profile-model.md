@@ -1,0 +1,5 @@
+# General per-profile data model, not a single hardcoded plan
+
+The app started as a direct port of Jayrold's single budget workbook — one salary, one rent bill, his specific GLoans, his specific class schedule, all as near-constants in the model. Decided instead that the data model has no privileged user: every income source, bill, loan, and flexible expense is user-created with its own id; pay schedules are a general tagged union (monthly / semi-monthly / weekly / biweekly / custom dates); the commute/school schedule is one optional `dailySpending` mode among others (most profiles will just use a flat allowance); currency and holidays are data a profile carries rather than code.
+
+Jayrold's own workbook becomes a seed/example profile (`fixtures/jayrold-profile.json`) used only to validate the engine against `reference/ledger.json` — not the app's default data for a new profile. The trade-off is real: a general model is more schema surface than hardcoding Jayrold's numbers, but the alternative is rewriting the data model again the moment a second real person (his girlfriend, a friend) tries to use the app.
