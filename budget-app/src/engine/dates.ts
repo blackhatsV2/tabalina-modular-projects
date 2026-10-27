@@ -87,7 +87,7 @@ function daysInMonthUTC(year: number, monthIndex0: number): number {
   return new Date(Date.UTC(year, monthIndex0 + 1, 0)).getUTCDate();
 }
 
-function resolveDayOfMonth(year: number, monthIndex0: number, day: DayOfMonth): number {
+export function resolveDayOfMonth(year: number, monthIndex0: number, day: DayOfMonth): number {
   const last = daysInMonthUTC(year, monthIndex0);
   if (day === "last") return last;
   if (!Number.isInteger(day) || day < 1) {
