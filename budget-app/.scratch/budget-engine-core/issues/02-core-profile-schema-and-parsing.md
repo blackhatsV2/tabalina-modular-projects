@@ -4,11 +4,14 @@
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] A function parses raw/unknown JSON into a typed Profile.
-- [ ] Core fields (`meta`, `accounts`, `periodSchedule`, `savingsGoals`, `safetyBuffer`, `periodOverrides`, `actuals`, `paid`) are validated; a profile with an invalid core field is rejected entirely.
-- [ ] `accounts` supports one or more named starting balances, pooled into a single spendable total.
-- [ ] `periodSchedule` accepts the same `PayScheduleRule` shape used for income schedules, independent of any specific module.
-- [ ] A `modules` section is accepted as present-but-not-yet-interpreted — real per-module validation arrives with each module's own ticket.
-- [ ] Every item that carries an `id` (accounts now; module items in later tickets) is validated to require one.
+- [x] A function parses raw/unknown JSON into a typed Profile.
+- [x] Core fields (`meta`, `accounts`, `periodSchedule`, `savingsGoals`, `safetyBuffer`, `periodOverrides`, `actuals`, `paid`) are validated; a profile with an invalid core field is rejected entirely.
+- [x] `accounts` supports one or more named starting balances, pooled into a single spendable total.
+- [x] `periodSchedule` accepts the same `PayScheduleRule` shape used for income schedules, independent of any specific module.
+- [x] A `modules` section is accepted as present-but-not-yet-interpreted — real per-module validation arrives with each module's own ticket.
+- [x] Every item that carries an `id` (accounts now; module items in later tickets) is validated to require one.
+
+Implemented in `src/model/schema.ts` (zod schemas, canonical types via `z.infer`) and `src/model/parse.ts`
+(`parseProfile`). `modules` defaults to `{}` and is typed `Record<string, unknown>` — not validated here.
