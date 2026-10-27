@@ -21,3 +21,9 @@ Projects are independent of each other. Adding a new project means adding a new 
 - `main` is the shared trunk for all projects.
 - Branches are short-lived and scoped to a single change, prefixed with the project they touch, e.g. `project-a/add-login`.
 - Changes that affect multiple projects get their own clearly-labeled branch.
+
+## Projects
+
+| Folder | What it is |
+|---|---|
+| `budget-app/` | Budget Buddy: offline-first personal budget app (React + TypeScript + Vite, Capacitor for Android, optional Supabase sync, Vercel deploy). See `budget-app/CLAUDE.md`. |
