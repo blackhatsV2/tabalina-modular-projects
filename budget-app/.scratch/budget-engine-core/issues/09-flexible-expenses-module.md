@@ -4,9 +4,13 @@
 
 **Blocked by:** 03
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] `modules.flexibleExpenses.items` supports any number of items, each with its own `id`, `enabled`, `reserveRoom`, `amount`, and recurrence.
-- [ ] An item with `enabled: true` contributes its cost on its recurrence dates; `enabled: false` contributes nothing to the computed plan, regardless of `reserveRoom`.
-- [ ] `modules.flexibleExpenses.enabled = false` excludes every item, regardless of each item's own `enabled`/`reserveRoom`.
-- [ ] Invalid flexible-expense data is excluded per ticket 03's isolation mechanism, with a warning.
+- [x] `modules.flexibleExpenses.items` supports any number of items, each with its own `id`, `enabled`, `reserveRoom`, `amount`, and recurrence.
+- [x] An item with `enabled: true` contributes its cost on its recurrence dates; `enabled: false` contributes nothing to the computed plan, regardless of `reserveRoom`.
+- [x] `modules.flexibleExpenses.enabled = false` excludes every item, regardless of each item's own `enabled`/`reserveRoom`.
+- [x] Invalid flexible-expense data is excluded per ticket 03's isolation mechanism, with a warning.
+
+Implemented in `src/engine/modules/flexibleExpenses/index.ts`. Also exports `contributeForLookahead`
+(item active if `enabled || reserveRoom`), used only by ticket 12's auto-savings algorithm — never by the
+real simulated plan.
