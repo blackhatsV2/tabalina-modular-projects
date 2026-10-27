@@ -119,7 +119,7 @@ Jayrold's own workbook becomes a seed/fixture profile built with this general mo
 
 ### 4. Suggestions engine (`src/suggestions/`, rule-based, offline)
 Rule-based only — no AI/network service.
-- A setup-wizard rule table: simple questions ("How are you paid?", "Do you commute?", "Any GLoan/SPayLater/other installments?") map to pre-filled `modules.income`/`modules.allowance`/`modules.commute`/`modules.loans` entries (enabling only the modules that apply), and default `periodSchedule` to the main income source's schedule so most users never have to think about it separately
+- A setup-wizard rule table: simple questions ("How are you paid?", "Do you commute?", "Any GLoan/SPayLater/other installments?") map to pre-filled `modules.income`/`modules.allowance`/`modules.commute`/`modules.loans` entries (enabling only the modules that apply — including suggesting *which one* of `allowance`/`commute` to turn on based on the answers, since most people want exactly one), and default `periodSchedule` to the main income source's schedule so most users never have to think about it separately
 - Repeated-spending detection over `actuals` → suggest promoting a pattern to a `modules.bills` entry
 - Shortfall warnings: surface the engine's own period `status` (OK / Below buffer / SHORTFALL) proactively, before the period starts
 - Safe-savings suggestion: this *is* the auto-savings algorithm from step 2 — no separate logic needed
@@ -132,7 +132,7 @@ Each screen/widget gets its own error boundary (see "Modularity & fault isolatio
 - **Days**: list grouped by week: day type, costs, bill/income markers, actual input
 - **Reports**: monthly + weekly tables and SVG charts (money at month-end spendable vs savings; income vs bills vs living)
 - **Bills & loans**: upcoming list, mark paid (with a suggestion once overdue), add a bill, loan payoff progress bars
-- **Setup / Commute & School**: accounts, income sources, bills, loans, flexible expenses, allowance/commute; the commute/school schedule grids and holidays only appear when the `commute` module is enabled
+- **Setup / Commute & School**: accounts, income sources, bills, loans, flexible expenses, allowance/commute; the commute/school schedule grids and holidays only appear when the `commute` module is enabled. If both `allowance` and `commute` are enabled at once, show a hint that their costs add up — so it's a choice the user made on purpose, not a surprise later
 - **Settings**: profile name, currency, safety buffer, emergency fund / savings goals, and a feature on/off list exposing each module's `enabled` flag (see "Modularity & fault isolation")
 - **Backup & sync**: export/import, Drive, sign in, sync status
 - **Help / glossary**: see step 6 (Help & explainability) for the ⓘ affordances, "explain this number," and the full glossary screen
