@@ -1,0 +1,5 @@
+# The engine returns a breakdown alongside every computed total
+
+"Explain this number" (step 6) needs to show the real figures behind any computed amount — a day's planned balance, a period's closing balance, a roll-up total. Considered letting the UI recompute an explanation by re-walking the profile data when a number is tapped. Decided instead that the engine itself returns the named terms and values that produced each total (e.g. a period's `{start, pay, bills, savings, living, end}`) as part of its normal output, not as a separate on-demand code path.
+
+A second, UI-side computation that re-derives "why is this number what it is" would drift from the engine's actual arithmetic the first time either one changes — exactly the kind of bug that's invisible until the explanation and the real total disagree. Returning the breakdown as part of the engine's regular result makes that impossible by construction: the UI only ever renders what the engine already computed. The cost is that every engine result type carries more structure than a bare number, and the parity test must also assert that each breakdown's terms sum to the total they explain.

@@ -44,6 +44,22 @@ _Avoid_: Pay schedule (that's the per-income-source field; period schedule is th
 The single, user-configurable minimum balance auto-savings protects on every future day of the plan. There is no separate "cushion" on top of it — considered and rejected, to avoid a second unexplained number in a UI aimed at someone new to budgeting.
 _Avoid_: Cushion, minimum balance.
 
+**Breakdown**:
+The named terms and real values behind a single computed total (a day's planned balance, a period's closing balance, a roll-up figure), returned by the engine alongside the total itself so the UI can show "explain this number" by rendering, never recomputing.
+_Avoid_: Explanation, trace (breakdown is the data; "explain this number" is the UI feature that renders it).
+
+**Help dictionary**:
+The single source of plain-language text for every label, setting, and computed-amount term, built from the workbook's glossary (`G` dict) and `GLOSSARY.md`. Powers the ⓘ affordances and the Help screen.
+_Avoid_: Tooltip text, copy (those describe where it's rendered, not the single source it's rendered from).
+
+**Core** (engine):
+The always-on part of the engine — profile data, date/money utilities, the period grid, and the balance + savings simulation. Has no knowledge of any module's internals.
+_Avoid_: Engine (the whole engine is core + modules together, not a synonym for core alone).
+
+**Module** (engine):
+One isolated, independently enable-able feature (`income`, `bills`, `loans`, `allowance`, `commute`, `flexibleExpenses`) behind one shared contribute-events/costs/breakdown interface. A module that fails is excluded with a warning; it never corrupts the core's totals or the other modules.
+_Avoid_: Plugin, extension.
+
 **Fee line**:
 An extra charge attached to a loan installment (e.g. a handling fee) that is still counted as its own dated amount in the day-by-day ledger.
 _Avoid_: Penalty, surcharge.
