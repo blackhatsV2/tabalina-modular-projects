@@ -20,7 +20,10 @@ function baseProfile(overrides: Partial<Profile> = {}): Profile {
     periodSchedule: { type: "monthly", day: 1 },
     savingsGoals: [],
     safetyBuffer: 0,
-    periodOverrides: {},
+    // Pin auto-savings (ticket 12) to 0 by default so these tests — which predate it and are
+    // about module isolation / breakdown invariants, not savings sizing — keep their original
+    // expected totals. The one test that cares about savings overrides this itself.
+    periodOverrides: { "2026-10-27": { savings: 0 } },
     actuals: {},
     paid: {},
     modules: {},

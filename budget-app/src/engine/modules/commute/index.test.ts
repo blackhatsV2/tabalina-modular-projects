@@ -88,7 +88,10 @@ function baseProfile(overrides: Partial<Profile> = {}): Profile {
     accounts: [{ id: "cash", name: "Cash", kind: "cash", startingBalance: 1000000 }],
     periodSchedule: { type: "monthly", day: 1 },
     savingsGoals: [],
-    safetyBuffer: 0,
+    // Equal to the starting balance: with no income module, balance only ever decreases, so
+    // auto-savings (ticket 12) computes 0 everywhere — these tests are about cost
+    // composition, not savings sizing.
+    safetyBuffer: 1000000,
     periodOverrides: {},
     actuals: {},
     paid: {},

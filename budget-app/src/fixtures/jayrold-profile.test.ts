@@ -41,4 +41,13 @@ describe("fixtures/jayrold-profile.json", () => {
       expect(day.start + sum).toBe(day.end);
     }
   });
+
+  it("auto-savings (no periodOverrides) keeps every day's balance at or above the safety buffer", () => {
+    const result = parseProfile(jayroldProfileRaw);
+    if (!result.success) throw new Error("expected success");
+    const simulation = simulate(result.profile);
+    const buffer = result.profile.safetyBuffer;
+    const belowBuffer = simulation.days.filter((d) => d.end < buffer);
+    expect(belowBuffer).toEqual([]);
+  });
 });

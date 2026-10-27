@@ -93,7 +93,9 @@ describe("roll-ups over a real simulate() result with every module disabled", ()
       accounts: [{ id: "cash", name: "Cash", kind: "cash", startingBalance: 10000 }],
       periodSchedule: { type: "monthly", day: 1 },
       savingsGoals: [],
-      safetyBuffer: 0,
+      // Equal to the starting balance so auto-savings (ticket 12) computes 0 everywhere —
+      // this test is about roll-up aggregation, not savings sizing.
+      safetyBuffer: 10000,
       periodOverrides: {},
       actuals: {},
       paid: {},

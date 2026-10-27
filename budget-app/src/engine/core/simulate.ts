@@ -1,10 +1,12 @@
 import type { Profile } from "../../model/schema";
 import { enumerateDays, type DateRange } from "../dates";
+import { contributeForLookahead, flexibleExpensesSectionSchema } from "../modules/flexibleExpenses";
 import { sumCentavos, type Centavos } from "../money";
 import { DEFAULT_MODULES } from "../modules/registry";
-import { mergeContributions, type ErasedModuleDefinition } from "../modules/types";
+import { EMPTY_CONTRIBUTION, mergeContributions, type ErasedModuleDefinition, type ModuleContribution } from "../modules/types";
+import { computeAutoSavingsFromBreakdown } from "./autoSavings";
 import { computePeriods } from "./periods";
-import { runModule } from "./runModule";
+import { runModule, type ModuleRunOutcome } from "./runModule";
 
 export interface DayResult {
   date: string;
@@ -46,6 +48,15 @@ export function simulate(profile: Profile, modules: ErasedModuleDefinition[] = D
 
   const startingBalance = sumCentavos(profile.accounts.map((a) => a.startingBalance));
 
+  const lookaheadBreakdownByDate = mergeContributions(buildLookaheadContributions(modules, outcomes, profile, range));
+  const autoSavings = computeAutoSavingsFromBreakdown(
+    periods,
+    lookaheadBreakdownByDate,
+    profile.periodOverrides,
+    startingBalance,
+    profile.safetyBuffer,
+  );
+
   const days: DayResult[] = [];
   let balance = startingBalance;
   let periodIndex = 0;
@@ -56,7 +67,7 @@ export function simulate(profile: Profile, modules: ErasedModuleDefinition[] = D
     const terms: Record<string, Centavos> = { ...(breakdownByDate[date] ?? {}) };
     if (date === period.start) {
       const override = profile.periodOverrides[period.start];
-      const savings = override?.savings ?? 0;
+      const savings = override?.savings ?? autoSavings[period.start] ?? 0;
       const extra = override?.extra ?? 0;
       if (savings !== 0) terms.savings = -savings;
       if (extra !== 0) terms.extra = -extra;
@@ -86,4 +97,32 @@ export function simulate(profile: Profile, modules: ErasedModuleDefinition[] = D
   });
 
   return { days, periods: periodResults, warnings };
+}
+
+/**
+ * The same per-module contributions used for the real plan, except the `flexibleExpenses`
+ * module (if present) is re-run with `contributeForLookahead` instead of its normal
+ * `contribute` — so a `reserveRoom` item counts as enabled for auto-savings' sizing (ticket
+ * 12) without ever affecting the real simulated plan above. Every other module's outcome is
+ * reused unchanged; this is a deliberate, narrow exception to core's module-agnosticism,
+ * required because `reserveRoom` is specifically a flexibleExpenses concept.
+ */
+function buildLookaheadContributions(
+  modules: ErasedModuleDefinition[],
+  outcomes: ModuleRunOutcome[],
+  profile: Profile,
+  range: DateRange,
+): ModuleContribution[] {
+  return modules.map((m, i) => {
+    if (m.name !== "flexibleExpenses") return outcomes[i].contribution;
+    const raw = profile.modules[m.name];
+    if (raw === undefined) return EMPTY_CONTRIBUTION;
+    const parsed = flexibleExpensesSectionSchema.safeParse(raw);
+    if (!parsed.success || !parsed.data.enabled) return EMPTY_CONTRIBUTION;
+    try {
+      return contributeForLookahead(parsed.data, range);
+    } catch {
+      return EMPTY_CONTRIBUTION;
+    }
+  });
 }
