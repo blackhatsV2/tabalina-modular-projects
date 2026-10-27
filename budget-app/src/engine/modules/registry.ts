@@ -1,5 +1,6 @@
 import { allowanceModule } from "./allowance";
 import { billsModule } from "./bills";
+import { commuteModule } from "./commute";
 import { incomeModule } from "./income";
 import { loansModule } from "./loans";
 import { eraseModule, type ErasedModuleDefinition } from "./types";
@@ -13,4 +14,5 @@ export const DEFAULT_MODULES: ErasedModuleDefinition[] = [
   eraseModule(billsModule),
   eraseModule(loansModule),
   eraseModule(allowanceModule),
+  eraseModule(commuteModule),
 ];
