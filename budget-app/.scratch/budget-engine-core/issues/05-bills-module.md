@@ -4,11 +4,15 @@
 
 **Blocked by:** 03
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] `modules.bills.items` supports `monthly` (incl. `"last"` day), `weekly`, `yearly`, and `once` recurrence kinds.
-- [ ] Each bill's due dates are expanded using the shared date/recurrence seam.
-- [ ] A bill's amount lands as a cost on its due date(s), visible in that day's and that period's breakdown.
-- [ ] A `once` bill produces exactly one occurrence, never repeating.
-- [ ] `modules.bills.enabled = false` excludes all bills from the computed plan.
-- [ ] Invalid bills data is excluded per ticket 03's isolation mechanism, with a warning, while the rest of the plan still computes.
+- [x] `modules.bills.items` supports `monthly` (incl. `"last"` day), `weekly`, `yearly`, and `once` recurrence kinds.
+- [x] Each bill's due dates are expanded using the shared date/recurrence seam.
+- [x] A bill's amount lands as a cost on its due date(s), visible in that day's and that period's breakdown.
+- [x] A `once` bill produces exactly one occurrence, never repeating.
+- [x] `modules.bills.enabled = false` excludes all bills from the computed plan.
+- [x] Invalid bills data is excluded per ticket 03's isolation mechanism, with a warning, while the rest of the plan still computes.
+
+Implemented in `src/engine/modules/bills/index.ts`. Added `billRecurrenceSchema`/`yearlyRuleSchema`/
+`onceRuleSchema` etc. to `src/model/schema.ts` so bills, loans, and flexible expenses can share the same
+recurrence building blocks as `PayScheduleRule`.

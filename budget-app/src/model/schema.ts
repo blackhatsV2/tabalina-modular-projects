@@ -3,20 +3,30 @@ import { z } from "zod";
 /** Centavos: an integer count, never a float. Shared by every money field in the schema. */
 const centavos = z.number().int();
 
-const dayOfMonth = z.union([z.number().int().min(1).max(31), z.literal("last")]);
+export const dayOfMonthSchema = z.union([z.number().int().min(1).max(31), z.literal("last")]);
 
-const monthlyRuleSchema = z.object({ type: z.literal("monthly"), day: dayOfMonth });
-const semiMonthlyRuleSchema = z.object({
+export const monthlyRuleSchema = z.object({ type: z.literal("monthly"), day: dayOfMonthSchema });
+export const semiMonthlyRuleSchema = z.object({
   type: z.literal("semiMonthly"),
-  days: z.tuple([dayOfMonth, dayOfMonth]),
+  days: z.tuple([dayOfMonthSchema, dayOfMonthSchema]),
 });
-const weeklyRuleSchema = z.object({ type: z.literal("weekly"), weekday: z.number().int().min(0).max(6) });
-const biweeklyRuleSchema = z.object({
+export const weeklyRuleSchema = z.object({
+  type: z.literal("weekly"),
+  weekday: z.number().int().min(0).max(6),
+});
+export const biweeklyRuleSchema = z.object({
   type: z.literal("biweekly"),
   weekday: z.number().int().min(0).max(6),
   anchor: z.string(),
 });
-const customRuleSchema = z.object({ type: z.literal("custom"), dates: z.array(z.string()) });
+export const customRuleSchema = z.object({ type: z.literal("custom"), dates: z.array(z.string()) });
+export const yearlyRuleSchema = z.object({
+  type: z.literal("yearly"),
+  month: z.number().int().min(1).max(12),
+  day: z.number().int().min(1).max(31),
+});
+export const onceRuleSchema = z.object({ type: z.literal("once"), date: z.string() });
+export const dailyRuleSchema = z.object({ type: z.literal("daily") });
 
 /** Shared by `periodSchedule` (core) and every income source's `schedule`. */
 export const payScheduleRuleSchema = z.discriminatedUnion("type", [
@@ -25,6 +35,14 @@ export const payScheduleRuleSchema = z.discriminatedUnion("type", [
   weeklyRuleSchema,
   biweeklyRuleSchema,
   customRuleSchema,
+]);
+
+/** `modules.bills` items' recurrence: monthly (incl. "last"), weekly, yearly, or a single `once` date. */
+export const billRecurrenceSchema = z.discriminatedUnion("type", [
+  monthlyRuleSchema,
+  weeklyRuleSchema,
+  yearlyRuleSchema,
+  onceRuleSchema,
 ]);
 
 const currencySchema = z.object({
