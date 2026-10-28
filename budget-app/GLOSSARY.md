@@ -5,7 +5,7 @@ A general-purpose personal budgeting app. Jayrold's own workbook is its first va
 ## Language
 
 **Profile**:
-A user's complete budget document — accounts, income sources, bills, loans, flexible expenses, daily-spending mode, savings goals. One per person; the engine has no privileged user baked in.
+A user's complete budget document — accounts, income sources, bills, loans, flexible expenses, daily spending, savings goals. One per person; the engine has no privileged user baked in.
 _Avoid_: Plan (that word is reserved for the budgeting time window — `planStart`/`planEnd` — and the Plan screen's pay-period cards).
 
 **Example profile**:
@@ -28,9 +28,9 @@ _Avoid_: Optional expense, discretionary spending.
 A flag on a flexible expense meaning auto-savings sizes every period as if that expense were enabled, even when it is currently switched off, so turning it on later never causes a shortfall.
 _Avoid_: Buffer, cushion — those describe the safety buffer, a different concept.
 
-**Daily spending mode**:
-The profile-level choice of how everyday living costs are computed: a flat allowance, or the commute module.
-_Avoid_: Daily cost model.
+**Daily spending**:
+Everyday living costs (fare, meals, flat allowance) computed by whichever of `allowance` or `commute` is enabled — two independent modules, not a single mutually-exclusive mode. Most profiles enable exactly one, by convention; nothing stops both from running and summing.
+_Avoid_: Daily spending mode, daily cost model (both imply a single either/or switch, which this isn't).
 
 **Commute module**:
 The optional daily-spending mode that computes rides, fares, meals, and holidays from a weekly schedule and a calendar of terms. Jayrold's own setup — not assumed for every profile.
@@ -63,3 +63,20 @@ _Avoid_: Plugin, extension.
 **Fee line**:
 An extra charge attached to a loan installment (e.g. a handling fee) that is still counted as its own dated amount in the day-by-day ledger.
 _Avoid_: Penalty, surcharge.
+
+**Spending entry**:
+One logged item within a day's `actuals` — an amount with an optional note and an optional free-text category. A day's actual total is always the sum of its entries, never stored as a separate value.
+_Avoid_: Actual, log entry — both are ambiguous with the day-level `actuals` map itself, which holds a list of entries, not a single one.
+
+## Screens & help (Stage 2)
+
+**Status stamp**:
+The visual rendering of a day's or period's OK / Low / Short standing against the safety buffer (CLAUDE.md's "status chip," realized as a circular rubber-stamp badge in the Libreta visual direction) — always paired with a text label, never conveyed by color alone.
+
+**Margin note**:
+The ⓘ explanation affordance, rendered as a note attached to the row it explains — inline beneath the row on phones, connected by a leader line to the margin on tablet/desktop (≥768px).
+_Avoid_: Tooltip, popover — this app's ⓘ affordance is anchored and persistent-looking, not a transient hover bubble.
+
+**Horizon strip**:
+A thin ink-on-paper strip marking today's position within the *current* pay period. Shown on the Today screen and on the Plan screen's current-period card only — past and future period cards never show it, since they have no "today" to mark.
+_Avoid_: Progress bar — this isn't a completion metric, only a position in time.

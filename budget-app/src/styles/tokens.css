@@ -1,0 +1,145 @@
+/*
+ * Design tokens — "Libreta" visual direction (see docs/adr/0006-libreta-visual-direction.md).
+ *
+ * A passbook ledger, not a dashboard: paper and ink, hairline rules instead of card shadows,
+ * circular rubber-stamp badges for status. Borrows two elements from directions not chosen:
+ * the margin-note style for ⓘ explanations (Teacher's Ledger) and the horizon strip marking
+ * today's position within the current pay period (Iloilo Morning), both restyled to ink/paper
+ * with no gradient.
+ *
+ * Fonts are self-hosted via @fontsource, Latin subset only, so they work offline/in the APK
+ * and satisfy the CSP (self-hosted, no third-party font requests). Import this file once at
+ * the app root; components consume the custom properties below, never raw hex values.
+ */
+
+/* Fraunces: the ONE hero number per screen (e.g. "₱2,565.46 left to spend today"). Nothing else
+   uses it — see ADR 0006 on spending boldness in one place. */
+@import "@fontsource/fraunces/latin-600.css";
+
+/* IBM Plex Sans: everything else — labels, body, buttons, money columns (tabular figures). */
+@import "@fontsource/ibm-plex-sans/latin-400.css";
+@import "@fontsource/ibm-plex-sans/latin-500.css";
+@import "@fontsource/ibm-plex-sans/latin-600.css";
+@import "@fontsource/ibm-plex-sans/latin-400-italic.css"; /* margin-note ⓘ explanations only */
+
+:root {
+  /* ---- Color: light mode (the paper page) ---- */
+  --color-paper: #f7f3e8;
+  --color-paper-muted: #efe9d8; /* input fields, the horizon strip's track */
+  --color-ink: #28313a;
+  --color-ink-muted: #5b6b63;
+  --color-rule: #8c8268; /* hairline dividers — decorative row separators, not load-bearing */
+
+  --color-pine: #1f3d2e; /* brand: nav bar/sidebar background, links */
+  --color-pine-contrast: #f7f3e8; /* text/icons on pine */
+
+  /* Status colors always pair with a text label (OK / Low / Short) — never color alone. */
+  --color-status-ok: #3f5f38; /* outline + text, on paper */
+  --color-status-short: #8a2e22; /* outline + text, on paper */
+  --color-status-low-fill: #d4b05a; /* fill ONLY — brass is never used as text on paper */
+  --color-status-low-ink: #28313a; /* dark text/icon drawn on the brass fill above */
+
+  --color-focus-ring: #1f3d2e;
+
+  /* ---- Type ---- */
+  --font-display: "Fraunces", ui-serif, Georgia, serif; /* one hero number per screen only */
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --text-hero: clamp(2rem, 1.4rem + 4vw, 2.75rem);
+  --text-xl: 1.5rem;
+  --text-lg: 1.125rem;
+  --text-base: 1rem;
+  --text-sm: 0.875rem; /* margin-note explanations, secondary labels */
+  --text-xs: 0.75rem;
+
+  --leading-tight: 1.15;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.6; /* margin notes — a little extra air for first-time readers */
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  /* Apply to every money amount: tabular figures so columns of amounts align. */
+  --font-feature-money: "tnum" 1;
+
+  /* ---- Spacing (4px base) ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem; /* mobile side gutter */
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+
+  /* ---- Shape & sizing ---- */
+  --radius-sm: 6px; /* buttons, inputs — Libreta avoids large card radii entirely */
+  --radius-stamp: 50%; /* status stamp badges are circular, like a rubber stamp */
+  --tap-target-min: 44px;
+
+  /* ---- Motion ---- */
+  --motion-fast: 120ms;
+  --motion-normal: 200ms;
+  --motion-ease: ease-out;
+}
+
+/*
+ * Breakpoint reference (can't be a custom property — media queries don't accept var()):
+ * 360px  minimum supported width, one column.
+ * 768px  switch from bottom tab bar to sidebar nav ("ledger + sidebar").
+ * Keep every @media (min-width: ...) in the app at these two values.
+ */
+
+/* ---- Color: dark mode ("passbook-cover green" / night ledger) ----
+ * Follows the system setting now; a manual override hook ([data-theme]) is included so a
+ * future Settings toggle (CLAUDE.md step 5) can force either mode without retouching tokens.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-paper: #1b211c;
+    --color-paper-muted: #242b24;
+    --color-ink: #ede8db;
+    --color-ink-muted: #afae9e;
+    --color-rule: #6b7260;
+
+    --color-pine: #2a4a37;
+    --color-pine-contrast: #ede8db;
+
+    --color-status-ok: #8fb37d;
+    --color-status-short: #e08a77;
+    --color-status-low-fill: #c7a355;
+    --color-status-low-ink: #1b211c;
+
+    --color-focus-ring: #8fb37d;
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-paper: #1b211c;
+  --color-paper-muted: #242b24;
+  --color-ink: #ede8db;
+  --color-ink-muted: #afae9e;
+  --color-rule: #6b7260;
+
+  --color-pine: #2a4a37;
+  --color-pine-contrast: #ede8db;
+
+  --color-status-ok: #8fb37d;
+  --color-status-short: #e08a77;
+  --color-status-low-fill: #c7a355;
+  --color-status-low-ink: #1b211c;
+
+  --color-focus-ring: #8fb37d;
+}
+
+/* Every token pair above (text or UI-essential color on its stated background) is checked to
+   meet WCAG AA: ≥4.5:1 for text, ≥3:1 for the hairline rule treated as meaningful structure. */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0ms;
+    --motion-normal: 0ms;
+  }
+}
