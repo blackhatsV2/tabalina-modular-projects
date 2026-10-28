@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
 import type { ModuleDefinition } from "../modules/types";
-import { runModule } from "./runModule";
+import { runModule, runModuleContribute } from "./runModule";
 
 const range = { start: "2026-10-27", end: "2026-10-30" };
 
@@ -11,6 +11,13 @@ const throwingModule: ModuleDefinition<{ enabled: boolean }> = {
   contribute: () => {
     throw new Error("boom");
   },
+};
+
+const badOutputModule: ModuleDefinition<{ enabled: boolean }> = {
+  name: "badOutput",
+  schema: z.object({ enabled: z.boolean() }),
+  // Returns a non-integer amount — valid input, but the contribution itself is malformed.
+  contribute: (_section, r) => ({ breakdown: { [r.start]: { oops: 12.5 } } }),
 };
 
 const invalidSchemaModule: ModuleDefinition<{ enabled: boolean; mustHave: string }> = {
@@ -56,5 +63,31 @@ describe("runModule", () => {
     const outcome = runModule(throwingModule, { enabled: true }, range);
     expect(outcome.contribution).toEqual({ breakdown: {} });
     expect(outcome.warning).toMatch(/throws/i);
+  });
+
+  it("excludes the module and warns once when contribute() returns data failing its own output shape", () => {
+    const outcome = runModule(badOutputModule, { enabled: true }, range);
+    expect(outcome.contribution).toEqual({ breakdown: {} });
+    expect(outcome.warning).toMatch(/badOutput/i);
+  });
+});
+
+describe("runModuleContribute with a label", () => {
+  it("distinguishes a secondary run's warning from the module's normal name", () => {
+    const outcome = runModuleContribute(
+      throwingModule,
+      throwingModule.contribute,
+      { enabled: true },
+      range,
+      "auto-savings sizing",
+    );
+    expect(outcome.name).toBe("throws (auto-savings sizing)");
+    expect(outcome.warning).toMatch(/throws \(auto-savings sizing\)/);
+  });
+
+  it("runs a different contribute-shaped function than the module's own", () => {
+    const alternate = () => ({ breakdown: { "2026-10-27": { alt: 42 } } });
+    const outcome = runModuleContribute(workingModule, alternate, { enabled: true, amount: 1 }, range);
+    expect(outcome.contribution).toEqual({ breakdown: { "2026-10-27": { alt: 42 } } });
   });
 });

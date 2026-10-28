@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { payScheduleRuleSchema } from "../../../model/schema";
-import { expandRecurrence, type DateRange } from "../../dates";
+import { clampRange, expandRecurrence, type DateRange } from "../../dates";
 import type { Centavos } from "../../money";
 import type { ModuleContribution, ModuleDefinition } from "../types";
 
@@ -20,12 +20,6 @@ export const incomeSectionSchema = z.object({
 });
 
 export type IncomeSection = z.infer<typeof incomeSectionSchema>;
-
-function clampRange(range: DateRange, startDate?: string, endDate?: string): DateRange {
-  const start = startDate && startDate > range.start ? startDate : range.start;
-  const end = endDate && endDate < range.end ? endDate : range.end;
-  return { start, end };
-}
 
 function contribute(section: IncomeSection, range: DateRange): ModuleContribution {
   const breakdown: Record<string, Record<string, Centavos>> = {};

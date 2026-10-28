@@ -47,6 +47,21 @@ export function divideCentavosEvenly(total: Centavos, count: number): Centavos[]
   return installments;
 }
 
+/**
+ * Merges a list of signed-term breakdown records into one, summing each term across the
+ * list — the shared shape a day's breakdown, a pay period's, and a weekly/monthly roll-up's
+ * breakdown all reduce to.
+ */
+export function sumBreakdownTerms(records: Record<string, Centavos>[]): Record<string, Centavos> {
+  const total: Record<string, Centavos> = {};
+  for (const record of records) {
+    for (const [term, amount] of Object.entries(record)) {
+      total[term] = (total[term] ?? 0) + amount;
+    }
+  }
+  return total;
+}
+
 /** The largest multiple of `multiple` that is <= `amount` (floors toward negative infinity). */
 export function floorToMultiple(amount: Centavos, multiple: number): Centavos {
   assertInteger(amount, "floorToMultiple amount");

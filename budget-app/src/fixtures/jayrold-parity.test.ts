@@ -13,6 +13,14 @@ interface Ledger {
 
 const ledger = ledgerData as unknown as Ledger;
 
+/**
+ * Converts `reference/ledger.json`'s peso-float amounts (Python's output, round-tripped
+ * through JSON) into integer centavos. This is a test-only boundary with external legacy
+ * data, not engine arithmetic — ADR 0001's "never float for money" rule is about every
+ * amount the engine itself computes or stores, which stays integer centavos throughout;
+ * `Math.round` here just undoes JSON's float representation of an already centavo-precise
+ * number, the same way parsing a decimal string off a form would.
+ */
 function pesosToCentavos(pesos: number): number {
   return Math.round(pesos * 100);
 }

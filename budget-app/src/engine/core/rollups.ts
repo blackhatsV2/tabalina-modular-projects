@@ -1,14 +1,10 @@
 import { addDays, parseISO } from "../dates";
-import type { Centavos } from "../money";
+import { sumBreakdownTerms } from "../money";
 import type { DayResult } from "./simulate";
+import type { BalanceSummary } from "./types";
 
-export interface Rollup {
-  start: string;
-  end: string;
-  startBalance: Centavos;
-  endBalance: Centavos;
-  breakdown: Record<string, Centavos>;
-}
+/** A weekly/monthly roll-up bucket — see {@link BalanceSummary}. */
+export type Rollup = BalanceSummary;
 
 function groupConsecutiveBy(days: DayResult[], bucketKey: (date: string) => string): DayResult[][] {
   const groups: DayResult[][] = [];
@@ -28,18 +24,12 @@ function groupConsecutiveBy(days: DayResult[], bucketKey: (date: string) => stri
 }
 
 function summarize(group: DayResult[]): Rollup {
-  const breakdown: Record<string, Centavos> = {};
-  for (const day of group) {
-    for (const [term, amount] of Object.entries(day.breakdown)) {
-      breakdown[term] = (breakdown[term] ?? 0) + amount;
-    }
-  }
   return {
     start: group[0].date,
     end: group[group.length - 1].date,
     startBalance: group[0].start,
     endBalance: group[group.length - 1].end,
-    breakdown,
+    breakdown: sumBreakdownTerms(group.map((d) => d.breakdown)),
   };
 }
 

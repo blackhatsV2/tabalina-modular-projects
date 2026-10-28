@@ -5,6 +5,7 @@ import {
   floorToMultiple,
   multiplyCentavos,
   subtractCentavos,
+  sumBreakdownTerms,
   sumCentavos,
 } from "./money";
 
@@ -55,5 +56,19 @@ describe("money (integer centavos)", () => {
     expect(floorToMultiple(199, 100)).toBe(100);
     expect(floorToMultiple(-50, 100)).toBe(-100);
     expect(floorToMultiple(0, 100)).toBe(0);
+  });
+
+  it("sums the same term across a list of breakdown records", () => {
+    expect(
+      sumBreakdownTerms([
+        { income: 100, bills: -50 },
+        { income: 200 },
+        { bills: -30 },
+      ]),
+    ).toEqual({ income: 300, bills: -80 });
+  });
+
+  it("returns an empty record for an empty list", () => {
+    expect(sumBreakdownTerms([])).toEqual({});
   });
 });

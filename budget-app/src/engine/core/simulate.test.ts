@@ -122,6 +122,37 @@ describe("simulate", () => {
     expect(result.days.every((d) => d.start === 300000 && d.end === 300000)).toBe(true);
   });
 
+  it("warns when a module's contributeForLookahead fails even though its normal contribute() succeeds", () => {
+    const flaky: ModuleDefinition<{ enabled: boolean }> = {
+      name: "flaky",
+      schema: z.object({ enabled: z.boolean() }),
+      contribute: () => ({ breakdown: { "2026-10-27": { flakyCost: -1000 } } }),
+      contributeForLookahead: () => {
+        throw new Error("sizing exploded");
+      },
+    };
+    const result = simulate(baseProfile({ modules: { flaky: { enabled: true } } }), [eraseModule(flaky)]);
+    expect(result.warnings).toHaveLength(1);
+    expect(result.warnings[0]).toMatch(/flaky \(auto-savings sizing\)/);
+    // The real plan is unaffected by the lookahead-only failure.
+    const day27 = result.days.find((d) => d.date === "2026-10-27")!;
+    expect(day27.breakdown.flakyCost).toBe(-1000);
+  });
+
+  it("never double-warns when a module already excluded by its normal run also has a lookahead variant", () => {
+    const brokenWithLookahead: ModuleDefinition<{ enabled: boolean; mustHave: string }> = {
+      name: "brokenWithLookahead",
+      schema: z.object({ enabled: z.boolean(), mustHave: z.string() }),
+      contribute: () => ({ breakdown: {} }),
+      contributeForLookahead: () => ({ breakdown: {} }),
+    };
+    const result = simulate(baseProfile({ modules: { brokenWithLookahead: { enabled: true } } }), [
+      eraseModule(brokenWithLookahead),
+    ]);
+    expect(result.warnings).toHaveLength(1);
+    expect(result.warnings[0]).toMatch(/brokenWithLookahead/);
+  });
+
   it("applies periodOverrides.savings and .extra as lump subtractions on the period's start day", () => {
     const result = simulate(
       baseProfile({ periodOverrides: { "2026-10-27": { savings: 1000, extra: 500 } } }),

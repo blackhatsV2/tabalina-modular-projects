@@ -237,3 +237,14 @@ export function addDays(dateISO: string, days: number): string {
 export function compareISO(a: string, b: string): number {
   return parseISO(a).getTime() - parseISO(b).getTime();
 }
+
+/**
+ * Narrows `range` to an item's own optional `startDate`/`endDate` window — the shared
+ * "an item is only active while it's in range" clamp every module with that shape
+ * (income sources, bills) reuses instead of its own copy.
+ */
+export function clampRange(range: DateRange, startDate?: string, endDate?: string): DateRange {
+  const start = startDate && startDate > range.start ? startDate : range.start;
+  const end = endDate && endDate < range.end ? endDate : range.end;
+  return { start, end };
+}

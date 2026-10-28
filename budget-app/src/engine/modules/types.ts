@@ -1,4 +1,4 @@
-import type { z } from "zod";
+import { z } from "zod";
 import type { Centavos } from "../money";
 import type { DateRange } from "../dates";
 
@@ -18,6 +18,15 @@ export interface ModuleContribution {
 export const EMPTY_CONTRIBUTION: ModuleContribution = { breakdown: {} };
 
 /**
+ * Validates a `contribute()` return value's shape and that every amount is an integer
+ * centavo count — the core zod-validates what a module returns, not just what it's given, so
+ * a module that returns malformed data without throwing is excluded the same as one that does.
+ */
+export const moduleContributionSchema = z.object({
+  breakdown: z.record(z.string(), z.record(z.string(), z.number().int())),
+});
+
+/**
  * One isolated, independently enable-able feature module, behind the one shared interface
  * every module in `src/engine/modules/<name>/` implements (ADR 0005). `schema` validates the
  * module's own raw `modules.<name>` section (must include `enabled: boolean`); `contribute`
@@ -27,6 +36,13 @@ export interface ModuleDefinition<Section extends { enabled: boolean } = { enabl
   name: string;
   schema: z.ZodType<Section>;
   contribute(section: Section, range: DateRange): ModuleContribution;
+  /**
+   * An alternate `contribute()` used only by the auto-savings whole-plan lookahead (ticket
+   * 12) — e.g. flexibleExpenses treats a `reserveRoom` item as enabled here, regardless of
+   * its real `enabled`. Modules with no reason to differ omit this; core falls back to
+   * `contribute`. Never used for the real simulated plan.
+   */
+  contributeForLookahead?(section: Section, range: DateRange): ModuleContribution;
 }
 
 /** The common shape the registry stores modules as — each one's real `Section` is checked at

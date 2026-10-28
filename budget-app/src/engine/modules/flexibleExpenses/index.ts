@@ -64,4 +64,5 @@ export const flexibleExpensesModule: ModuleDefinition<FlexibleExpensesSection> =
   name: "flexibleExpenses",
   schema: flexibleExpensesSectionSchema,
   contribute,
+  contributeForLookahead,
 };

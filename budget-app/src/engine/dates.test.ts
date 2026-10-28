@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { enumerateDays, expandRecurrence } from "./dates";
+import { clampRange, enumerateDays, expandRecurrence } from "./dates";
 
 describe("expandRecurrence", () => {
   it("expands a monthly rule on a fixed day", () => {
@@ -119,5 +119,25 @@ describe("enumerateDays", () => {
 
   it("returns a single day when start equals end", () => {
     expect(enumerateDays({ start: "2026-10-27", end: "2026-10-27" })).toEqual(["2026-10-27"]);
+  });
+});
+
+describe("clampRange", () => {
+  const range = { start: "2026-10-01", end: "2026-10-31" };
+
+  it("narrows the start when startDate falls inside the range", () => {
+    expect(clampRange(range, "2026-10-10")).toEqual({ start: "2026-10-10", end: "2026-10-31" });
+  });
+
+  it("narrows the end when endDate falls inside the range", () => {
+    expect(clampRange(range, undefined, "2026-10-20")).toEqual({ start: "2026-10-01", end: "2026-10-20" });
+  });
+
+  it("leaves the range untouched when startDate/endDate fall outside it", () => {
+    expect(clampRange(range, "2026-01-01", "2027-01-01")).toEqual(range);
+  });
+
+  it("leaves the range untouched when neither is given", () => {
+    expect(clampRange(range)).toEqual(range);
   });
 });

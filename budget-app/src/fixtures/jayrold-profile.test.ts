@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import jayroldProfileRaw from "../../fixtures/jayrold-profile.json";
+import phHolidays from "../data/holidays/ph.json";
 import { parseProfile } from "../model/parse";
 import { simulate } from "../engine/core/simulate";
 
@@ -21,6 +22,11 @@ describe("fixtures/jayrold-profile.json", () => {
     const result = parseProfile(jayroldProfileRaw);
     if (!result.success) throw new Error("expected success");
     expect(result.profile.periodOverrides).toEqual({});
+  });
+
+  it("matches the reusable src/data/holidays/ph.json dataset exactly (no drift between the two copies)", () => {
+    const commute = jayroldProfileRaw.modules.commute as { holidays: { date: string; name: string }[] };
+    expect(commute.holidays).toEqual(phHolidays);
   });
 
   it("parses and runs through simulate() with zero warnings", () => {
